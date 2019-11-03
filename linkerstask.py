@@ -24,7 +24,7 @@ def safe_list_get(l: List, idx: int, default=None):
         return default
 
 
-def search_address(search_str: Optional[str]) -> List[str]:
+def search_address(search_str: Optional[str], is_perfect_matching=False) -> List[str]:
     if search_str is None or search_str == '':
         raise UserInputError('引数に検索文字列を入れて下さい。')
     
@@ -44,18 +44,29 @@ def search_address(search_str: Optional[str]) -> List[str]:
         index_dic: Dict = json.loads(f.read())
 
     line_number_set_list: List[Set[LineNumber]] = []
-    for search_char2 in search_n_gram_list:
-        # ex. line_numbers = [101, 20001, 90521]
-        line_numbers: Optional[List[LineNumber]] = index_dic.get(search_char2)
-        if line_numbers is None:
-            pass
-        else:
-            line_number_set_list.append(set(line_numbers))
+    line_number_set: Set[LineNumber]
     
-    if len(line_number_set_list) == 0:
-        raise AddressNotFoundError('検索結果はありません。')
-
-    line_number_union: Set[LineNumber] = set.union(*line_number_set_list)
+    if not is_perfect_matching:
+        # 完全一致でない場合は和集合を求める
+        for search_char2 in search_n_gram_list:
+            # ex. line_numbers = [101, 20001, 90521]
+            line_numbers: Optional[List[LineNumber]] = index_dic.get(search_char2)
+            if line_numbers is None:
+                pass
+            else:
+                line_number_set_list.append(set(line_numbers))
+        if len(line_number_set_list) == 0:
+            raise AddressNotFoundError('検索結果はありません。')
+        line_number_set = set.union(*line_number_set_list)
+    else:
+        # 完全一致の場合は積集合を求める
+        for search_char2 in search_n_gram_list:
+            line_numbers: Optional[List[LineNumber]] = index_dic.get(search_char2)
+            if line_numbers is None:
+                raise AddressNotFoundError('検索結果はありません。')
+            else:
+                line_number_set_list.append(set(line_numbers))
+        line_number_set = set.intersection(*line_number_set_list)
 
     if not os.path.isfile(ADDRESS_CSV_PATH):
         raise AddressCsvNotFoundError('住所のCSVファイルが指定ディレクトリに存在しません。')
@@ -64,7 +75,7 @@ def search_address(search_str: Optional[str]) -> List[str]:
         reader_obj: List = list(csv.reader(csv_file))
 
     result: List[str] = []
-    for line_number in line_number_union:
+    for line_number in line_number_set:
         index = line_number - 1
         address_row = reader_obj[index]
         address_str = '"' + address_row[2] + '","' + address_row[6] + '","' + address_row[7] + '","'
@@ -82,7 +93,9 @@ def search_address(search_str: Optional[str]) -> List[str]:
 def main() -> None:
     args = sys.argv
     command_name: Optional[str] = safe_list_get(args, 1)
-    search_str: Optional[str] = safe_list_get(args, 2)
+    options = [option for option in args if option.startswith('-')]
+    others = [option for option in args if not option.startswith('-')]
+    search_str: Optional[str] = safe_list_get(others, 2)
 
     if command_name is None:
         print('引数が不足しています。')
@@ -94,8 +107,11 @@ def main() -> None:
         return
     
     if command_name == 'search':
+        is_perfect_matching = False
+        if '-p' in options or '--perfect' in options:
+            is_perfect_matching = True
         try:
-            addresses: List[str] = search_address(search_str)
+            addresses: List[str] = search_address(search_str, is_perfect_matching=is_perfect_matching)
             for address in addresses:
                 print(address)
         except UserInputError as e:
