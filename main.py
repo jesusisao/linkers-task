@@ -25,13 +25,16 @@ def safe_list_get(l: List, idx: int, default=None):
 
 
 def search_address(search_str: Optional[str]) -> List[str]:
-    if search_str is None:
+    if search_str is None or search_str == '':
         raise UserInputError('引数に検索文字列を入れて下さい。')
     
-    if len(search_str) <= 1:
-        raise UserInputError('1文字では検索できません。')
+    # 全角スペース除去
+    search_str_extracted = search_str.replace('　', '')
 
-    search_n_gram_list: List[str] = to_n_gram(search_str, 2)
+    if len(search_str_extracted) <= 1:
+        raise UserInputError('1文字以下では検索できません。')
+
+    search_n_gram_list: List[str] = to_n_gram(search_str_extracted, 2)
     
     if not os.path.isfile(INDEX_PATH):
         print('indexファイルが存在しないため、indexファイルの作成を行います。')
