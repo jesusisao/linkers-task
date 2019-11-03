@@ -1,4 +1,4 @@
-# linkers-task
+# linkers-task 実行説明資料
 
 リンカーズ株式会社様の二次面接課題の回答です。
 
@@ -17,7 +17,7 @@ pip install https://github.com/pyinstaller/pyinstaller/archive/develop.tar.gz
 ## TODO
 
 - 完全一致検索への対応
-- 実行説明資料、技術説明資料の作成
+- 技術説明資料の作成
 - GitHubへのアップロード
 
 ## 実行
@@ -26,11 +26,21 @@ pip install https://github.com/pyinstaller/pyinstaller/archive/develop.tar.gz
 
 コマンドでも作成できますが、初回検索時にindexがなかった場合は自動で作成されます。
 
+#### 直接実行
+
 ```
 python3 linkerstask.py index
 ```
 
+#### バイナリで実行
+
+```
+./linkerstask index
+```
+
 ### 検索例
+
+#### 直接実行
 
 ```
 python3 linkerstask.py search 渋谷
@@ -43,6 +53,19 @@ python3 linkerstask.py search 天神
 python3 linkerstask.py search 久美
 ```
 
+#### バイナリで実行
+
+```
+./linkerstask search 渋谷
+./linkerstask search 東京都
+
+# 8行に渡ってcsvの住所が書かれている例
+./linkerstask search 天神
+
+# 同一の郵便番号に複数の町域がある例
+./linkerstask search 久美
+```
+
 ## 単体テスト実行
 
 ```
@@ -52,5 +75,5 @@ python3 -m unittest
 ## バイナリファイルのビルド
 
 ```
-pyinstaller linkerstask.py --onefile --windowed --clean
+pyinstaller linkerstask.py --onefile --clean
 ```
