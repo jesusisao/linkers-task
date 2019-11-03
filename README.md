@@ -18,7 +18,6 @@ pip install https://github.com/pyinstaller/pyinstaller/archive/develop.tar.gz
 
 - 完全一致検索への対応
 - 技術説明資料の作成
-- GitHubへのアップロード
 
 ## 実行
 
