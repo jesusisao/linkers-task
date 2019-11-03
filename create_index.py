@@ -2,10 +2,12 @@
 
 import csv
 import json
+import os
 from typing import Dict, List, NewType
 
 from n_gram import to_n_gram
 from constants import INDEX_PATH, ADDRESS_CSV_PATH
+from error import AddressCsvNotFoundError
 
 
 # CSVの行番号を示す型
@@ -81,6 +83,9 @@ def format_csv_obj(reader_obj: List[List[str]]) -> Dict[LineNumber, str]:
 
 
 def create_index():
+    if not os.path.isfile(ADDRESS_CSV_PATH):
+        raise AddressCsvNotFoundError('住所のCSVファイルが指定ディレクトリに存在しません。')
+
     print('Creating index file...')
     index_dic = {}
     with open(ADDRESS_CSV_PATH, encoding='shift_jis') as csv_file:

@@ -1,5 +1,13 @@
+.vscode
+
 __pycache__
 
+# pyinstaller
+dist
+build
+*.spec
+
+# user definition
 tests/log/*
 !tests/log/.gitkeep
 

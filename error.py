@@ -3,3 +3,6 @@ class UserInputError(Exception):
 
 class AddressNotFoundError(Exception):
     pass
+
+class AddressCsvNotFoundError(Exception):
+    pass

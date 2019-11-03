@@ -9,7 +9,7 @@ from pprint import pprint
 
 from create_index import create_index, is_the_end_of_an_address
 from n_gram import to_n_gram
-from error import AddressNotFoundError, UserInputError
+from error import AddressNotFoundError, UserInputError, AddressCsvNotFoundError
 from constants import INDEX_PATH, ADDRESS_CSV_PATH
 
 
@@ -56,6 +56,9 @@ def search_address(search_str: Optional[str]) -> List[str]:
         raise AddressNotFoundError('検索結果はありません。')
 
     line_number_union: Set[LineNumber] = set.union(*line_number_set_list)
+
+    if not os.path.isfile(ADDRESS_CSV_PATH):
+        raise AddressCsvNotFoundError('住所のCSVファイルが指定ディレクトリに存在しません。')
 
     with open(ADDRESS_CSV_PATH, encoding='shift_jis') as csv_file:
         reader_obj: List = list(csv.reader(csv_file))
