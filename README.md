@@ -1,82 +1,45 @@
 # linkers-task 実行説明資料
 
+## 目的
+
 リンカーズ株式会社様の二次面接課題の回答です。
+この資料が実行説明資料です。技術説明資料については、tech_description.mdをご参照ください。
 
 ## 動作環境
 
 実行ファイルはmacOS Mojave 10.12.6で動作確認済みです。
 
-## 開発環境
-
-python 3.8.0で動作確認済みです。
-
-実行ファイルを生成するためにpyinstallerを使用しています。
-2019/11/03現在、python 3.8.0に対応したpyinstallerは未リリースのため、
-開発用のものを直接インストールする必要があります。
-
-```
-pip install https://github.com/pyinstaller/pyinstaller/archive/develop.tar.gz
-```
-
-## TODO
-
-- 技術説明資料の作成
-
 ## 実行
 
-### インデックスの作成 
+### インデックス作成 
 
 コマンドでも作成できますが、初回検索時にindexがなかった場合は自動で作成されます。
-
-#### 直接実行
-
-```
-python3 linkerstask.py index
-```
-
-#### バイナリで実行
 
 ```
 ./linkerstask index
 ```
 
-### 検索例
+### 検索
 
 #### 直接実行
 
-```
-python3 linkerstask.py search 渋谷
-python3 linkerstask.py search 東京都
-
-# 8行に渡ってcsvの住所が書かれている例
-python3 linkerstask.py search 天神
-
-# 同一の郵便番号に複数の町域がある例
-python3 linkerstask.py search 久美
-```
+CSVで複数行に分かれている住所でも問題なく検索可能です。
+また、同一の郵便番号だけれども町域は別、という住所でも問題なく検索可能です。
 
 なお、`-p`もしくは`--perfect`をつけると完全一致で検索することができます。
-ただし、この場合は例２にあったように「東京都」で検索した時に東京と京都が含まれている住所は出てきません。
-（「京都」で検索をかけると、「東京都」と「京都」が出てきます。）
-
-```
-python3 linkerstask.py search -p 京都
-```
-
-#### バイナリで実行
+ただし、このオプションを使用した場合は二次面接課題の例２にあったように、
+「東京都」で検索した時に「東京」と「京都」が含まれている住所は出てきません。
+「京都」で検索をかけると、「東京都」と「京都」が出てきます。
 
 ```
 ./linkerstask search 渋谷
-```
+./linkerstask search 東京都
 
-## 単体テスト実行
+./linkerstask search -p 京都
 
-```
-python3 -m unittest
-```
+# 8行に渡ってcsvの住所が書かれている例
+./linkerstask search 天神
 
-## バイナリファイルのビルド
-
-```
-pyinstaller linkerstask.py --onefile --clean
+# 同一の郵便番号に複数の町域がある例
+./linkerstask search 久美
 ```
