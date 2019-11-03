@@ -9,7 +9,7 @@ python 3.8.0で動作確認を行っています。
 開発用のものを直接pipでインストールする必要がありました。
 それ以外は標準のライブラリを使用しています。
 
-```
+```sh
 pip install https://github.com/pyinstaller/pyinstaller/archive/develop.tar.gz
 
 # ※ PyInstaller 4.0.dev0+5d4bbbeea を使ってビルドを行いました。
@@ -24,25 +24,25 @@ linkerstask.pyがエントリとなるため、ここをpython3として実行�
 
 #### 直接実行
 
-```
+```sh
 python3 linkerstask.py index
 ```
 
 #### バイナリで実行
 
-```
+```sh
 ./linkerstask index
 ```
 
 ## 単体テスト実行
 
-```
+```sh
 python3 -m unittest
 ```
 
 ## バイナリファイルのビルド
 
-```
+```sh
 pyinstaller linkerstask.py --onefile --clean
 ```
 
@@ -87,7 +87,7 @@ pyinstaller linkerstask.py --onefile --clean
 
 例：東京都
 
-```
+```json
 {
     東京: [1, 2, 3],
     京都: [1, 6]
